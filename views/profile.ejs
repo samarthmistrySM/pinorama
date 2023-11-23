@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Profile Page</title>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" />
+  <link rel="stylesheet" href="/stylesheets/profile.css">
+
+</head>
+
+<body>
+
+
+  <div class="main">
+    <h2>IDENTITY</h2>
+    <div class="card">
+      <div class="card-body">
+        <table>
+          <tbody>
+            <tr>
+              <td>Name</td>
+              <td>:</td>
+              <td><%=user.username%></td>
+            </tr>
+            <tr>
+              <td>Email</td>
+              <td>:</td>
+              <td><%=user.email%></td>
+            </tr>
+            <tr>
+              <td>Full Name:</td>
+              <td>:</td>
+              <td><%=user.fullname%></td>
+            </tr>
+            <tr>
+              <td>Hobbies</td>
+              <td>:</td>
+              <td>Lorem ipsum dolor sit amet consectetur adipisicing elit. Perspiciatis repellat saepe blanditiis sed inventore voluptas.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <button id="logout-btn" onclick="window.location.href='/logout'">Logout</button>
+    <form action="/upload" enctype="multipart/form-data" method="post">
+      <input type="text" name="filecaption">
+      <input type="file" name="file">
+      <input type="submit" value="upload">
+    </form>
+  </div>
+  <div class="card-image">
+    <% user.posts.forEach(post => { %>
+      <div class="image-container">
+        <img src="/images/uploads/<%=post.image  %>" alt="Profile Image" />
+        <p class="image-caption"><%=post.imageText%></p>
+      </div>
+    <% }); %>
+  </div>
+  </div>
+</body>
+
+</html>
