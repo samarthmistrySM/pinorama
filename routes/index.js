@@ -17,24 +17,26 @@ router.get("/login", function (req, res, next) {
   res.render("login", { error: req.flash("error") });
 });
 
-router.get("/feed", function (req, res, next) {
-  res.render("feed");
-});
+
 
 router.post("/upload", upload.single("file"), async function (req, res, next) {
-  if (!req.file) {
-    return res.status(404).send("no file were uploaded. ");
+  try {
+    if (!req.file) {
+      return res.status(404).send("no file were uploaded. ");
+    }
+    const user = await userModel.findOne({ username: req.session.passport.user });
+    const post = await postModel.create({
+      image: req.file.filename,
+      imageText: req.body.filecaption,
+      user: user._id,
+    });
+  
+    await user.posts.push(post._id);
+    await user.save();
+    res.redirect("/profile")
+  } catch (error) {
+    res.send(error);
   }
-  const user = await userModel.findOne({ username: req.session.passport.user });
-  const post = await postModel.create({
-    image: req.file.filename,
-    imageText: req.body.filecaption,
-    user: user._id,
-  });
-
-  await user.posts.push(post._id);
-  await user.save();
-  res.redirect("/profile")
 });
 
 router.get("/profile", isLoggedIn, async function (req, res, next) {
@@ -44,6 +46,12 @@ router.get("/profile", isLoggedIn, async function (req, res, next) {
   .populate("posts")
   console.log(user);
   res.render("profile", { user });
+});
+
+router.get("/feed",async function (req, res, next) {
+  const posts = await postModel.find({})
+  console.log(posts);
+  res.render("feed",{posts});
 });
 
 router.post("/register", (req, res) => {
