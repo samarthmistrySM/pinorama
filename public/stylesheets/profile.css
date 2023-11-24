@@ -86,3 +86,22 @@ table td {
 #logout-btn:hover {
   background-color: rgb(194, 2, 2);
 }
+
+
+.flex{
+  display: flex;
+  justify-content: center;
+}
+
+button{
+  margin: 0 10px;
+  padding: 5px 10px;
+  color: white;
+}
+
+ #like{
+  background-color: rgb(0, 106, 255);
+}
+ #dislike{
+  background-color: rgb(255, 145, 0);
+}

@@ -44,14 +44,12 @@ router.get("/profile", isLoggedIn, async function (req, res, next) {
     username: req.session.passport.user,
   })
   .populate("posts")
-  console.log(user);
   res.render("profile", { user });
 });
 
 router.get("/feed",async function (req, res, next) {
   const posts = await postModel.find({})
-  console.log(posts);
-  res.render("feed",{posts});
+  res.render("feed",{posts,req});
 });
 
 router.post("/register", (req, res) => {
@@ -74,6 +72,45 @@ router.post(
     failureFlash: true,
   })
 );
+
+router.post('/like/:postId', isLoggedIn, async (req, res) => {
+  const postId = req.params.postId;
+
+  try {
+      const post = await postModel.findById(postId);
+
+      if (!post.likes.includes(req.user._id)) {
+          post.likes.push(req.user._id);
+          await post.save();
+          res.redirect('back');
+      } else {
+        res.redirect('back');
+      }
+  } catch (error) {
+      console.error(error);
+      res.redirect('back');
+  }
+});
+
+router.post('/dislike/:postId', isLoggedIn, async (req, res) => {
+  const postId = req.params.postId;
+
+  try {
+      const post = await postModel.findById(postId);
+
+      const userIndex = post.likes.indexOf(req.user._id);
+      if (userIndex !== -1) {
+          post.likes.splice(userIndex, 1); 
+          await post.save();
+      }
+
+      res.redirect('back');
+  } catch (error) {
+      console.error(error);
+      res.redirect('back');
+  }
+});
+
 
 router.get("/logout", function (req, res) {
   req.logout(function (err) {

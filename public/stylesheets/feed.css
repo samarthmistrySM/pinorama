@@ -19,3 +19,28 @@ img{
   max-width: 100%;
   height: 30vh;
 }
+
+#login{
+  text-decoration: none;
+  background: red;
+  padding: 10px;
+  color: white;
+}
+
+.flex{
+  display: flex;
+  justify-content: center;
+}
+
+button{
+  margin: 0 10px;
+  padding: 5px 10px;
+  color: white;
+}
+
+ #like{
+  background-color: rgb(0, 106, 255);
+}
+ #dislike{
+  background-color: rgb(255, 145, 0);
+}

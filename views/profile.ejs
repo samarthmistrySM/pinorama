@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Profile Page</title>
+  <title><%=user.username%></title>
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" />
   <link rel="stylesheet" href="/stylesheets/profile.css">
@@ -36,15 +36,16 @@
               <td><%=user.fullname%></td>
             </tr>
             <tr>
-              <td>Hobbies</td>
+              <td>Posts</td>
               <td>:</td>
-              <td>Lorem ipsum dolor sit amet consectetur adipisicing elit. Perspiciatis repellat saepe blanditiis sed inventore voluptas.</td>
+              <td><%=user.posts.length%></td>
             </tr>
           </tbody>
         </table>
       </div>
     </div>
     <button id="logout-btn" onclick="window.location.href='/logout'">Logout</button>
+    <button id="logout-btn" onclick="window.location.href='/feed'">feed</button>
     <form action="/upload" enctype="multipart/form-data" method="post">
       <input type="text" name="filecaption">
       <input type="file" name="file">
@@ -56,6 +57,21 @@
       <div class="image-container">
         <img src="/images/uploads/<%=post.image  %>" alt="Profile Image" />
         <p class="image-caption"><%=post.imageText%></p>
+        <div class="flex">
+          <form action="/like/<%= post._id %>" method="POST">
+              <button id="like" type="submit">Like</button>
+          </form>
+          <form action="/dislike/<%= post._id %>" method="POST">
+              <button id="dislike" type="submit">Dislike</button>
+          </form>
+      </div>
+        <p>
+          <% if (post.likes && post.likes.length > 0) { %>
+              <%= post.likes.length %> <%= post.likes.length === 1 ? 'like' : 'likes' %>
+          <% } else { %>
+              0 likes
+          <% } %>
+      </p>
       </div>
     <% }); %>
   </div>
