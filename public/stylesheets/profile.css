@@ -105,3 +105,8 @@ button{
  #dislike{
   background-color: rgb(255, 145, 0);
 }
+
+#delete{
+  background: red;
+  color: #fff;
+}

@@ -38,7 +38,7 @@
             <tr>
               <td>Posts</td>
               <td>:</td>
-              <td><%=user.posts.length%></td>
+              <td><%=user.posts.length  %></td>
             </tr>
           </tbody>
         </table>
@@ -64,6 +64,10 @@
           <form action="/dislike/<%= post._id %>" method="POST">
               <button id="dislike" type="submit">Dislike</button>
           </form>
+          <form action="/deletepost/<%= post._id %>" method="POST">
+              <button id="delete" type="submit">Delete</button>
+          </form>
+
       </div>
         <p>
           <% if (post.likes && post.likes.length > 0) { %>

@@ -10,6 +10,15 @@
 </head>
 
 <body>
+    <div class="navbar">
+        <% if (req.isAuthenticated()) { %>
+            <a href="/profile" class="links"><ion-icon name="person-circle-outline"></ion-icon><p><%=user.username%></p></a>
+            <a href="/logout" class="links"><ion-icon name="log-out-outline"></ion-icon> <p>Logout</p></a>
+            </div>
+            <% } else { %>
+                <a href="/login" class="links"><ion-icon name="log-in-outline"></ion-icon><p>Login</p></a>
+            <% } %>
+    </div>
     <div class="container">
         <% posts.forEach(post => { %>
             <div class="image-container">
@@ -38,7 +47,6 @@
         <% }) %>
     </div>
 </body>
-
-  
-
+<script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 </html>

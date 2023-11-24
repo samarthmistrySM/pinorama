@@ -47,9 +47,20 @@ router.get("/profile", isLoggedIn, async function (req, res, next) {
   res.render("profile", { user });
 });
 
-router.get("/feed",async function (req, res, next) {
-  const posts = await postModel.find({})
-  res.render("feed",{posts,req});
+router.get('/feed', async (req, res, next) => {
+  try {
+    const posts = await postModel.find({});
+
+    if (req.isAuthenticated()) {
+      const user = await userModel.findOne({ username: req.session.passport.user });
+      res.render('feed', { posts, req, user });
+    } else {
+      res.render('feed', { posts, req });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Internal Server Error');
+  }
 });
 
 router.post("/register", (req, res) => {
@@ -111,6 +122,23 @@ router.post('/dislike/:postId', isLoggedIn, async (req, res) => {
   }
 });
 
+router.post('/deletepost/:postId', isLoggedIn, async (req, res) => {
+  const postId = req.params.postId;
+
+  try {
+    const post = await postModel.findOne({ _id: postId, user: req.user._id });
+
+    if (!post) {
+      return res.status(404).send('Post not found or you do not have permission to delete it.');
+    }
+
+    await postModel.findByIdAndDelete(postId);
+    res.redirect('back');
+  } catch (error) {
+    console.error(error);
+    res.redirect('back');
+  }
+});
 
 router.get("/logout", function (req, res) {
   req.logout(function (err) {

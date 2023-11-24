@@ -3,6 +3,15 @@ body {
   font-family: Arial, sans-serif;
 }
 
+.navbar{
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+  background-color: red;
+  color: #fff;
+  padding: 5px 20px;
+}
+
 .container {
   display: flex;
   flex-wrap: wrap;
@@ -20,11 +29,21 @@ img{
   height: 30vh;
 }
 
-#login{
+.links{
+  display: flex;
   text-decoration: none;
   background: red;
   padding: 10px;
   color: white;
+}
+
+ion-icon{
+  margin-top:10px ;
+  margin-right: 10px;
+  color: red;
+  background: #fff;
+  font-size: 30px;
+  border-radius: 100%;
 }
 
 .flex{
@@ -44,3 +63,4 @@ button{
  #dislike{
   background-color: rgb(255, 145, 0);
 }
+
