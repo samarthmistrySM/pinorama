@@ -21,8 +21,8 @@ body {
 }
 
 .img1 {
-  width: 80px;
-  height: 80px;
+  width: auto;
+  height: 40px;
 }
 
 .header {

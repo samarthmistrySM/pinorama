@@ -1,12 +1,13 @@
 body {
   margin: 0;
   font-family: Arial, sans-serif;
+  width: 100vw;
 }
 
 .navbar{
   display: flex;
   justify-content: space-around;
-  width: 100%;
+  width: 100vm;
   background-color: red;
   color: #fff;
   padding: 5px 20px;
@@ -49,6 +50,14 @@ ion-icon{
 .flex{
   display: flex;
   justify-content: center;
+}
+
+.card {
+  background: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+  overflow: hidden;
+  margin: 10px;
 }
 
 button{

@@ -49,7 +49,10 @@ router.get("/profile", isLoggedIn, async function (req, res, next) {
 
 router.get('/feed', async (req, res, next) => {
   try {
-    const posts = await postModel.find({});
+    const posts = await postModel.find({})
+    .populate("user")
+
+    console.log(posts)
 
     if (req.isAuthenticated()) {
       const user = await userModel.findOne({ username: req.session.passport.user });
@@ -122,17 +125,18 @@ router.post('/dislike/:postId', isLoggedIn, async (req, res) => {
   }
 });
 
-router.post('/deletepost/:postId', isLoggedIn, async (req, res) => {
+router.post('/dislike/:postId', isLoggedIn, async (req, res) => {
   const postId = req.params.postId;
 
   try {
-    const post = await postModel.findOne({ _id: postId, user: req.user._id });
+    const post = await postModel.findById(postId);
 
-    if (!post) {
-      return res.status(404).send('Post not found or you do not have permission to delete it.');
+    const userLiked = post.likes.includes(req.user._id);
+    if (userLiked) {
+      post.likes.pull(req.user._id); 
+      await post.save();
     }
 
-    await postModel.findByIdAndDelete(postId);
     res.redirect('back');
   } catch (error) {
     console.error(error);
