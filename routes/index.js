@@ -8,6 +8,7 @@ const { renderRegister,
   registerUser, 
   likePost,
   dislikePost,
+  deletePost,
   logout,
   isLoggedIn } = require('../controllers/index')
 
@@ -44,6 +45,8 @@ indexRouter.post(
 indexRouter.post('/like/:postId', isLoggedIn, likePost);
 
 indexRouter.post('/dislike/:postId', isLoggedIn, dislikePost);
+
+indexRouter.post('/deletepost/:postId',isLoggedIn, deletePost);
 
 indexRouter.get("/logout", logout);
 

@@ -111,6 +111,19 @@ async function dislikePost(req,res){
     }
 }
 
+async function deletePost(req,res){
+  const postId = req.params.postId;
+
+  try{
+    const post = await postModel.findByIdAndDelete(postId);
+    return res.redirect('back');
+  }
+  catch(error){
+    console.log(error);
+    return res.redirect('back');
+  }
+}
+
 function logout(req,res) {
     req.logout(function (err) {
         if (err) {
@@ -134,6 +147,7 @@ module.exports = {
   registerUser,
   likePost,
   dislikePost,
+  deletePost,
   logout,
   isLoggedIn
 };
