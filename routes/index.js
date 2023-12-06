@@ -1,84 +1,38 @@
 var express = require("express");
-var router = express.Router();
+var indexRouter = express.Router();
+const { renderRegister,
+  renderLogin, 
+  uploadPost, 
+  userProfile, 
+  exploreFeed, 
+  registerUser, 
+  likePost,
+  dislikePost,
+  logout,
+  isLoggedIn } = require('../controllers/index')
 
-const userModel = require("./users");
-const postModel = require("./posts");
 const passport = require("passport");
-const localStrategy = require("passport-local");
-const upload = require("./multer");
 
-passport.use(new localStrategy(userModel.authenticate()));
+const userModel = require('../models/userModel')
+const postModel = require("../models/postModel")
 
-router.get("/", function (req, res, next) {
-  res.render("index");
-});
-
-router.get("/login", function (req, res, next) {
-  res.render("login", { error: req.flash("error") });
-});
+const upload = require("../middlewares/multer");
 
 
 
-router.post("/upload", upload.single("file"), async function (req, res, next) {
-  try {
-    if (!req.file) {
-      return res.status(404).send("no file were uploaded. ");
-    }
-    const user = await userModel.findOne({ username: req.session.passport.user });
-    const post = await postModel.create({
-      image: req.file.filename,
-      imageText: req.body.filecaption,
-      user: user._id,
-    });
-  
-    await user.posts.push(post._id);
-    await user.save();
-    res.redirect("/profile")
-  } catch (error) {
-    res.send(error);
-  }
-});
+indexRouter.get("/", renderRegister);
 
-router.get("/profile", isLoggedIn, async function (req, res, next) {
-  const user = await userModel.findOne({
-    username: req.session.passport.user,
-  })
-  .populate("posts")
-  res.render("profile", { user });
-});
+indexRouter.get("/login", renderLogin);
 
-router.get('/feed', async (req, res, next) => {
-  try {
-    const posts = await postModel.find({})
-    .populate("user")
+indexRouter.post("/upload", upload.single("file"), uploadPost);
 
-    console.log(posts)
+indexRouter.get("/profile", isLoggedIn, userProfile);
 
-    if (req.isAuthenticated()) {
-      const user = await userModel.findOne({ username: req.session.passport.user });
-      res.render('feed', { posts, req, user });
-    } else {
-      res.render('feed', { posts, req });
-    }
-  } catch (error) {
-    console.error(error);
-    res.status(500).send('Internal Server Error');
-  }
-});
+indexRouter.get('/feed', exploreFeed);
 
-router.post("/register", (req, res) => {
-  console.log(req.body);
-  const { username, email, fullname } = req.body;
-  const userData = new userModel({ username, email, fullname });
+indexRouter.post("/register", registerUser);
 
-  userModel.register(userData, req.body.password).then(() => {
-    passport.authenticate("local")(req, res, () => {
-      res.redirect("/profile");
-    });
-  });
-});
-
-router.post(
+indexRouter.post(
   "/login",
   passport.authenticate("local", {
     successRedirect: "/profile",
@@ -87,78 +41,15 @@ router.post(
   })
 );
 
-router.post('/like/:postId', isLoggedIn, async (req, res) => {
-  const postId = req.params.postId;
+indexRouter.post('/like/:postId', isLoggedIn, likePost);
 
-  try {
-      const post = await postModel.findById(postId);
+indexRouter.post('/dislike/:postId', isLoggedIn, dislikePost);
 
-      if (!post.likes.includes(req.user._id)) {
-          post.likes.push(req.user._id);
-          await post.save();
-          res.redirect('back');
-      } else {
-        res.redirect('back');
-      }
-  } catch (error) {
-      console.error(error);
-      res.redirect('back');
-  }
-});
+indexRouter.get("/logout", logout);
 
-router.post('/dislike/:postId', isLoggedIn, async (req, res) => {
-  const postId = req.params.postId;
-
-  try {
-      const post = await postModel.findById(postId);
-
-      const userIndex = post.likes.indexOf(req.user._id);
-      if (userIndex !== -1) {
-          post.likes.splice(userIndex, 1); 
-          await post.save();
-      }
-
-      res.redirect('back');
-  } catch (error) {
-      console.error(error);
-      res.redirect('back');
-  }
-});
-
-router.post('/dislike/:postId', isLoggedIn, async (req, res) => {
-  const postId = req.params.postId;
-
-  try {
-    const post = await postModel.findById(postId);
-
-    const userLiked = post.likes.includes(req.user._id);
-    if (userLiked) {
-      post.likes.pull(req.user._id); 
-      await post.save();
-    }
-
-    res.redirect('back');
-  } catch (error) {
-    console.error(error);
-    res.redirect('back');
-  }
-});
-
-router.get("/logout", function (req, res) {
-  req.logout(function (err) {
-    if (err) {
-      return next(err);
-    }
-    res.redirect("/login");
-  });
-});
-
-function isLoggedIn(req, res, next) {
-  if (req.isAuthenticated()) return next();
-  res.redirect("/login");
-}
-
-router.get("*", (req, res) => {
+indexRouter.get("*", (req, res) => {
   res.render("404");
 });
-module.exports = router;
+
+
+module.exports = indexRouter;
