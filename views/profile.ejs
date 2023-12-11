@@ -71,14 +71,12 @@
               0 likes
             <% } %>
           </p>
-          <form action="/post/<%=post.id%>" method="get">
-            <input type="submit" value="Read More">
-          </form>
+          
         </div>
         <div class="card-body">
           <div class="flex">
             <form action="/like/<%= post._id %>" method="POST">
-              <button id="like" type="submit">
+              <button class="button" type="submit">
                 <% if (post.likes.includes(user._id)) { %>
                   Dislike
                 <% } else { %>
@@ -87,9 +85,12 @@
               </button>
             </form>
             <form action="/deletepost/<%= post._id %>" method="POST">
-              <button id="delete" type="submit">Delete</button>
+              <button class="button" type="submit">Delete</button>
             </form>
           </div>
+          <form action="/post/<%=post.id%>" method="get">
+            <input type="submit" value="Read More">
+          </form>
         </div>
       </div>
     <% }); %>

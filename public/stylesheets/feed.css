@@ -31,6 +31,22 @@ img {
   height: 30vh;
 }
 
+input[type="submit"] {
+  background-color: #ff4d4d;
+  margin-top: 10px;
+  padding: 10px;
+  border: none;
+  border-radius: 6px;
+  width: 100%;
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+input[type="submit"]:hover {
+  background-color: #ff3333; 
+}
+
 .links {
   display: flex;
   text-decoration: none;
@@ -63,15 +79,16 @@ ion-icon {
   margin: 10px;
 }
 
-button {
-  margin: 0 10px;
-  padding: 5px 10px;
-  color: white;
+.likebutton {
+  padding: 10px 20px;
+  background-color: #3498db;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
 }
 
-#like {
-  padding: 10px 20px;
-  border: none;
-  border-radius: 40px;
-  background-color: rgb(0, 106, 255);
+.likebutton:hover {
+  background-color: #2980b9;
 }

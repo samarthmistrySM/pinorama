@@ -36,7 +36,7 @@
                     <% if (req.isAuthenticated()) { %>
                         <div class="flex">
                             <form action="/like/<%= post._id %>" method="POST">
-                                <button id="like" type="submit">
+                                <button class="likebutton" type="submit">
                                     <% if (post.likes.includes(user._id)) { %>
                                         Dislike
                                     <% } else { %>

@@ -127,7 +127,10 @@ async function readPost(req,res){
   const postId = req.params.postId;
 
   try{
-    const post = await postModel.findById(postId).populate("comments.user");
+    const post = await postModel.findById(postId)
+    .populate("user")
+    .populate("comments.user");
+    console.log(post);
     if (req.isAuthenticated()) {
       const user = await userModel.findOne({
         username: req.session.passport.user,

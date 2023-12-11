@@ -46,7 +46,7 @@ indexRouter.post('/like/:postId', isLoggedIn, toggleLikePost);
 
 indexRouter.post('/deletepost/:postId',isLoggedIn, deletePost);
 
-indexRouter.get('/post/:postId',isLoggedIn,readPost);
+indexRouter.get('/post/:postId',readPost);
 
 indexRouter.post('/comments/:postId',isLoggedIn,postComments);
 

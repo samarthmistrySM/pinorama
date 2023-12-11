@@ -5,129 +5,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><%= post.imageText %></title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200&family=Raleway&display=swap');
-
-        * {
-            box-sizing: border-box;
-            padding: 0;
-            margin: 0;
-        }
-
-        body {
-            font-family: 'Raleway', sans-serif;
-            line-height: 1.6;
-            background-color: #f8f8f8;
-            color: #333;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            margin: 0;
-        }
-
-        h3,
-        h5 {
-            font-family: 'Poppins', sans-serif;
-            margin-bottom: 10px;
-        }
-
-        .post-container {
-            width: 80%;
-            max-width: 600px;
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-            margin-bottom: 20px;
-        }
-
-        .postimage {
-            width: 100%;
-            height: auto;
-            border-bottom: 1px solid #ddd;
-        }
-
-        .post-content {
-            margin-top: 15px;
-        }
-
-        .likes {
-            margin: 10px 0;
-        }
-
-        button {
-            padding: 10px 20px;
-            background-color: #3498db;
-            color: #fff;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        button:hover {
-            background-color: #2980b9;
-        }
-
-        form {
-            margin-top: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-        }
-
-        input[type="text"],
-        input[type="submit"] {
-            padding: 10px;
-            margin: 5px 0;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            width: 100%;
-            box-sizing: border-box;
-        }
-
-        input[type="submit"] {
-            background-color: #2ecc71;
-            color: #fff;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        input[type="submit"]:hover {
-            background-color: #27ae60;
-        }
-
-        .comments {
-            width: 80%;
-            max-width: 600px;
-            margin-top: 20px;
-        }
-
-        .comment {
-            margin-bottom: 15px;
-            padding: 10px;
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .comment h5 {
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-
-        .comment p {
-            margin: 0;
-        }
-    </style>
+    <link rel="stylesheet" href="/stylesheets/post.css">
 </head>
 
 <body>
     <div class="post-container">
         <h3><%= post.imageText %></h3>
-        <h5>Posted by <%= user.username %> at <br> <%=post.createdAt%></h5>
+        <h5>Posted by <%= post.user.username %> at <br> <%=post.createdAt%></h5>
         <img class="postimage" src="/images/uploads/<%= post.image %>" alt="Post Image">
         <div class="post-content">
             <p class="likes">
@@ -137,25 +21,29 @@
                     0 likes
                 <% } %>
             </p>
-            <form action="/like/<%= post._id %>" method="POST">
-                <button type="submit">
-                    <% if (post.likes.includes(user._id)) { %>
-                        Dislike
-                    <% } else { %>
-                        Like
-                    <% } %>
-                </button>
-            </form>
-            <form action="/comments/<%= post.id %>" method="post">
-                <input type="text" name="CommentText" id="CommentText" placeholder="Add a comment...">
-                <input type="submit" value="Post Comment">
-            </form>
+            <%  if (req.isAuthenticated()) { %>
+                <form action="/like/<%= post._id %>" method="POST">
+                    <button class="likebutton" type="submit">
+                        <% if (post.likes.includes(user._id)) { %>
+                            Dislike
+                        <% } else { %>
+                            Like
+                        <% } %>
+                    </button>
+                </form>
+                <form action="/comments/<%= post.id %>" method="post">
+                    <input type="text" name="CommentText" id="CommentText" placeholder="Add a comment...">
+                    <input type="submit" value="Post Comment">
+                </form>
+            <% } else { %>
+                <a href="/login">Login to like and comment</a>
+            <% } %>
         </div>
     </div>
     <div class="comments">
         <% post.comments.forEach(comment => { %>
             <div class="comment">
-                <h5><%= comment.user.username %></h5>
+                <h4><%= comment.user.username %></h4>
                 <p><%= comment.CommentText %></p>
             </div>
         <% }) %>
