@@ -130,7 +130,6 @@ async function readPost(req,res){
     const post = await postModel.findById(postId)
     .populate("user")
     .populate("comments.user");
-    console.log(post);
     if (req.isAuthenticated()) {
       const user = await userModel.findOne({
         username: req.session.passport.user,
@@ -164,13 +163,40 @@ async function postComments(req,res) {
     };
 
     post.comments.push(newComment);
-
     await post.save();
 
     res.redirect('back')
   } catch (error) {
     console.error(error);
     res.redirect('back')
+  }
+}
+
+async function likecomment(req,res){
+  try {
+    const postId = req.query.postId;
+    const commentId = req.params.commentId;
+
+    const post = await postModel.findById(postId);
+
+    const comment = post.comments.find(comment => comment.id == commentId);
+
+    console.log(comment);
+    
+    const userLiked = comment.CommentLikes.includes(req.user._id);
+    console.log(userLiked);
+
+    if(!userLiked){
+      comment.CommentLikes.push(req.user._id);
+    }
+    else{
+      comment.CommentLikes.pull(req.user._id);
+    }
+
+    await post.save();
+    res.redirect('back')
+  } catch (error) {
+    console.log(error);
   }
 }
 
@@ -199,6 +225,7 @@ module.exports = {
   deletePost,
   readPost,
   postComments,
+  likecomment,
   logout,
   isLoggedIn
 };

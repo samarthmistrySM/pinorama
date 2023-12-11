@@ -9,9 +9,18 @@
 </head>
 
 <body>
+    <div class="navbar">
+        <% if (req.isAuthenticated()) { %>
+            <a href="/profile" class="links"><ion-icon name="person-circle-outline"></ion-icon><p><%=user.username%></p></a>
+            <a href="/feed" class="links"><ion-icon name="telescope-outline"></ion-icon></ion-icon> <p>Feed</p></a>
+            </div>
+            <% } else { %>
+                <a href="/login" class="links"><ion-icon name="log-in-outline"></ion-icon><p>Login</p></a>
+            <% } %>
+    </div>
     <div class="post-container">
         <h3><%= post.imageText %></h3>
-        <h5>Posted by <%= post.user.username %> at <br> <%=post.createdAt%></h5>
+        <h5>Posted by <%= post.user.username %> on <br> <%=post.createdAt%></h5>
         <img class="postimage" src="/images/uploads/<%= post.image %>" alt="Post Image">
         <div class="post-content">
             <p class="likes">
@@ -42,12 +51,32 @@
     </div>
     <div class="comments">
         <% post.comments.forEach(comment => { %>
-            <div class="comment">
-                <h4><%= comment.user.username %></h4>
-                <p><%= comment.CommentText %></p>
+            <div class="comment flex">
+                <div class="comment-content">
+                    <h4><%= comment.user.username %></h4>
+                    <p><%= comment.CommentText %></p>
+                </div>
+                <div class="comment-likes">
+                    <%  if (req.isAuthenticated()) { %>
+                        <form action="/likecomment/<%= comment.id %>?postId=<%=post.id%>" method="post">
+                            <button id="likecomment" type="submit">  
+                                <% if (comment.CommentLikes.includes(user.id)) { %>
+                                    <ion-icon name="heart-dislike-outline"></ion-icon>
+                                  <% } else { %>
+                                    <ion-icon name="heart-outline"></ion-icon>
+                                  <% } %>
+                                <p><%=comment.CommentLikes.length%></p>
+                            </button>
+                        </form>
+                    <% } else { %>
+                        <a href="/login">login to like</a>
+                    <% } %>
+                </div>
             </div>
         <% }) %>
     </div>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 </body>
 
 </html>
