@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 // Comment Schema
 const commentSchema = new mongoose.Schema({
-  text: {
+  CommentText: {
     type: String,
     required: true,
   },
@@ -10,7 +10,7 @@ const commentSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
   },
-  likes: {
+  CommentLikes: {
     type: Array,
     default: [],
   },

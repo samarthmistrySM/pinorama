@@ -23,28 +23,35 @@
         <% posts.forEach(post => { %>
             <div class="card">
                 <div class="image-container">
-                    <p><%=post.user.username%></p>
+                    <h3><%=post.user.username%></h3>
                     <img src="/images/uploads/<%= post.image %>" alt="Profile Image" />
-                    <p class="image-caption"><%= post.imageText %></p>
-                    <% if (req.isAuthenticated()) { %>
-                        <div class="flex">
-                            <form action="/like/<%= post._id %>" method="POST">
-                                <button id="like" type="submit">Like</button>
-                            </form>
-                            <form action="/dislike/<%= post._id %>" method="POST">
-                                <button id="dislike" type="submit">Dislike</button>
-                            </form>
-                        </div>
-                    <% } else { %>
-                        <a href="/login" id="login">Login to like</a>
-                    <% } %>
-                    <p>
+                <p class="text-center"><%= post.imageText %></p>
+                    <p class="text-center">
                         <% if (post.likes && post.likes.length > 0) { %>
                             <%= post.likes.length %> <%= post.likes.length === 1 ? 'like' : 'likes' %>
                         <% } else { %>
                             0 likes
                         <% } %>
                     </p>
+                    <% if (req.isAuthenticated()) { %>
+                        <div class="flex">
+                            <form action="/like/<%= post._id %>" method="POST">
+                                <button id="like" type="submit">
+                                    <% if (post.likes.includes(user._id)) { %>
+                                        Dislike
+                                    <% } else { %>
+                                        Like
+                                    <% } %>
+                                </button>
+                            </form>
+                            
+                        </div>
+                    <% } else { %>
+                        <a href="/login" id="login">Login to like</a>
+                    <% } %>
+                    <form action="/post/<%=post.id%>" method="get">
+                        <input type="submit" value="Read More">
+                      </form>
                 </div>
             </div>
         <% }) %>

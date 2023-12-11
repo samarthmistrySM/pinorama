@@ -12,10 +12,11 @@ const { renderRegister,
   uploadPost, 
   userProfile, 
   exploreFeed, 
-  registerUser, 
-  likePost,
-  dislikePost,
+  registerUser,
+  toggleLikePost,
   deletePost,
+  readPost,
+  postComments,
   logout,
   isLoggedIn } = require('../controllers/index')
 
@@ -41,11 +42,13 @@ indexRouter.post(
   })
 );
 
-indexRouter.post('/like/:postId', isLoggedIn, likePost);
-
-indexRouter.post('/dislike/:postId', isLoggedIn, dislikePost);
+indexRouter.post('/like/:postId', isLoggedIn, toggleLikePost);
 
 indexRouter.post('/deletepost/:postId',isLoggedIn, deletePost);
+
+indexRouter.get('/post/:postId',isLoggedIn,readPost);
+
+indexRouter.post('/comments/:postId',isLoggedIn,postComments);
 
 indexRouter.get("/logout", logout);
 

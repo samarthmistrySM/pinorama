@@ -4,82 +4,110 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title><%=user.username%></title>
+  <title>
+    <%=user.username%>
+  </title>
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" />
   <link rel="stylesheet" href="/stylesheets/profile.css">
 
+  <style>
+
+  </style>
 </head>
 
 <body>
-
+  <div class="navbar">
+    <div class="user" id="userToggle">
+      <ion-icon name="person-outline"></ion-icon>
+      <h3>
+        <%=user.username%>
+      </h3>
+    </div>
+  </div>
 
   <div class="main">
-    <h2>IDENTITY</h2>
-    <div class="card">
-      <div class="card-body">
-        <table>
-          <tbody>
-            <tr>
-              <td>Name</td>
-              <td>:</td>
-              <td><%=user.username%></td>
-            </tr>
-            <tr>
-              <td>Email</td>
-              <td>:</td>
-              <td><%=user.email%></td>
-            </tr>
-            <tr>
-              <td>Full Name:</td>
-              <td>:</td>
-              <td><%=user.fullname%></td>
-            </tr>
-            <tr>
-              <td>Posts</td>
-              <td>:</td>
-              <td><%=user.posts.length  %></td>
-            </tr>
-          </tbody>
-        </table>
+    <div id="identity-container">
+      <div class="heading">
+        <h2>IDENTITY</h2>
+        <h5 id="close">Close</h5>
+      </div>
+      <div class="info-item">
+        <strong>Name:</strong> <%=user.username%>
+      </div>
+      <div class="info-item">
+        <strong>Email:</strong> <%=user.email%>
+      </div>
+      <div class="info-item">
+        <strong>Full Name:</strong> <%=user.fullname%>
+      </div>
+      <div class="info-item">
+        <strong>Posts:</strong> <%=user.posts.length %>
+      </div>
+      <div class="info-item">
+        <button id="logout-btn" onclick="window.location.href='/logout'">Logout</button>
+        <button id="logout-btn" onclick="window.location.href='/feed'">Feed</button>
       </div>
     </div>
-    <button id="logout-btn" onclick="window.location.href='/logout'">Logout</button>
-    <button id="logout-btn" onclick="window.location.href='/feed'">feed</button>
-    <form action="/upload" enctype="multipart/form-data" method="post">
-      <input type="text" name="filecaption">
+
+    <form id="fileform" action="/upload" enctype="multipart/form-data" method="post">
+      <input type="text" placeholder="Write caption!!" name="filecaption">
       <input type="file" name="file">
       <input type="submit" value="upload">
     </form>
   </div>
   <div class="card-image">
     <% user.posts.forEach(post => { %>
-      <div class="image-container">
-        <img src="/images/uploads/<%=post.image  %>" alt="Profile Image" />
-        <p class="image-caption"><%=post.imageText%></p>
-        <div class="flex">
-          <form action="/like/<%= post._id %>" method="POST">
-              <button id="like" type="submit">Like</button>
-          </form>
-          <form action="/dislike/<%= post._id %>" method="POST">
-              <button id="dislike" type="submit">Dislike</button>
-          </form>
-          <form action="/deletepost/<%= post._id %>" method="POST">
-              <button id="delete" type="submit">Delete</button>
-          </form>
-
-      </div>
-        <p>
-          <% if (post.likes && post.likes.length > 0) { %>
+      <div class="card">
+        <div class="card-header">
+          <img src="/images/uploads/<%= post.image %>" alt="Profile Image" />
+          <p class="image-caption"><%= post.imageText %></p>
+        </div>
+        <div class="card-footer">
+          <p>
+            <% if (post.likes && post.likes.length > 0) { %>
               <%= post.likes.length %> <%= post.likes.length === 1 ? 'like' : 'likes' %>
-          <% } else { %>
+            <% } else { %>
               0 likes
-          <% } %>
-      </p>
+            <% } %>
+          </p>
+          <form action="/post/<%=post.id%>" method="get">
+            <input type="submit" value="Read More">
+          </form>
+        </div>
+        <div class="card-body">
+          <div class="flex">
+            <form action="/like/<%= post._id %>" method="POST">
+              <button id="like" type="submit">
+                <% if (post.likes.includes(user._id)) { %>
+                  Dislike
+                <% } else { %>
+                  Like
+                <% } %>
+              </button>
+            </form>
+            <form action="/deletepost/<%= post._id %>" method="POST">
+              <button id="delete" type="submit">Delete</button>
+            </form>
+          </div>
+        </div>
       </div>
     <% }); %>
   </div>
+</div>
   </div>
+  </div>
+  <script>
+    document.getElementById('userToggle').addEventListener('click', function() {
+      document.getElementById('identity-container').style.transform = 'translateX(0%)';
+    });
+    document.getElementById('close').addEventListener('click', function() {
+      document.getElementById('identity-container').style.transform = 'translateX(100%)';
+    });
+  </script>
+  <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
 </body>
 
 </html>

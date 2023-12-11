@@ -1,10 +1,12 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200&family=Raleway&display=swap");
+
 body {
   margin: 0;
-  font-family: Arial, sans-serif;
+  font-family: 'Raleway', sans-serif;
   width: 100vw;
 }
 
-.navbar{
+.navbar {
   display: flex;
   justify-content: space-around;
   width: 100vm;
@@ -18,28 +20,29 @@ body {
   flex-wrap: wrap;
   justify-content: center;
   width: 100%;
-  
 }
 
-.image-container{
+.image-container {
   margin: 20px;
 }
 
-img{
+img {
   max-width: 100%;
   height: 30vh;
 }
 
-.links{
+.links {
   display: flex;
   text-decoration: none;
   background: red;
   padding: 10px;
   color: white;
 }
-
-ion-icon{
-  margin-top:10px ;
+.text-center{
+  text-align: center;
+}
+ion-icon {
+  margin-top: 10px;
   margin-right: 10px;
   color: red;
   background: #fff;
@@ -47,7 +50,7 @@ ion-icon{
   border-radius: 100%;
 }
 
-.flex{
+.flex {
   display: flex;
   justify-content: center;
 }
@@ -60,16 +63,15 @@ ion-icon{
   margin: 10px;
 }
 
-button{
+button {
   margin: 0 10px;
   padding: 5px 10px;
   color: white;
 }
 
- #like{
+#like {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 40px;
   background-color: rgb(0, 106, 255);
 }
- #dislike{
-  background-color: rgb(255, 145, 0);
-}
-

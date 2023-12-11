@@ -46,8 +46,6 @@ async function exploreFeed(req, res) {
   try {
     const posts = await postModel.find({}).populate("user");
 
-    console.log(posts);
-
     if (req.isAuthenticated()) {
       const user = await userModel.findOne({
         username: req.session.passport.user,
@@ -62,53 +60,54 @@ async function exploreFeed(req, res) {
   }
 }
 
-function registerUser(req, res) {
-  const { username, email, fullname } = req.body;
-  const userData = new userModel({ username, email, fullname });
+async function registerUser(req, res) {
+  try {
+    const { username, email, fullname } = req.body;
 
-  userModel.register(userData, req.body.password).then(() => {
-    passport.authenticate("local")(req, res, () => {
-      return res.redirect("/profile");
-    });
-  });
-}
+    const existingUser = await userModel.findOne({ username });
 
-async function likePost(req,res) {
-    const postId = req.params.postId;
-
-    try {
-        const post = await postModel.findById(postId);
-  
-        if (!post.likes.includes(req.user._id)) {
-            post.likes.push(req.user._id);
-            await post.save();
-            return res.redirect('back');
-        } else {
-          return res.redirect('back');
-        }
-    } catch (error) {
-        console.error(error);
-        return res.redirect('back');
+    if (existingUser) {
+      return res.send("User already exists");
     }
-}
 
-async function dislikePost(req,res){
-    const postId = req.params.postId;
+    const userData = new userModel({ username, email, fullname });
 
-    try {
-      const post = await postModel.findById(postId);
-  
-      const userLiked = post.likes.includes(req.user._id);
-      if (userLiked) {
-        post.likes.pull(req.user._id);
-        await post.save();
+    userModel.register(userData, req.body.password, (err, user) => {
+      if (err) {
+        console.error(err);
+        return res.send("email already exist!");
       }
-  
-    return  res.redirect('back');
-    } catch (error) {
+
+      passport.authenticate("local")(req, res, () => {
+        return res.redirect("/profile");
+      });
+    });
+  } catch (error) {
+    console.log(error);
+    res.send(error);
+  }
+}
+
+
+async function toggleLikePost(req, res) {
+  const postId = req.params.postId;
+
+  try {
+      const post = await postModel.findById(postId);
+      const userLiked = post.likes.includes(req.user._id);
+
+      if (!userLiked) {
+          post.likes.push(req.user._id);
+      } else {
+          post.likes.pull(req.user._id);
+      }
+
+      await post.save();
+      return res.redirect('back');
+  } catch (error) {
       console.error(error);
-    return  res.redirect('back');
-    }
+      return res.redirect('back');
+  }
 }
 
 async function deletePost(req,res){
@@ -121,6 +120,54 @@ async function deletePost(req,res){
   catch(error){
     console.log(error);
     return res.redirect('back');
+  }
+}
+
+async function readPost(req,res){
+  const postId = req.params.postId;
+
+  try{
+    const post = await postModel.findById(postId).populate("comments.user");
+    if (req.isAuthenticated()) {
+      const user = await userModel.findOne({
+        username: req.session.passport.user,
+      });
+      return res.render("post", { post, req, user });
+    } else {
+      return res.render("post", { post, req });
+    }
+  }
+  catch(error){
+    console.log(error);
+    res.redirect('back');
+  }
+}
+
+async function postComments(req,res) {
+  try {
+    const postId = req.params.postId;
+    const { CommentText } = req.body;
+
+    const post = await postModel.findById(postId);
+    
+    if (!post) {
+      return res.status(404).json({ error: 'Post not found' });
+    }
+
+    const newComment = {
+      CommentText,
+      user: req.user._id, 
+      CommentLikes: [], 
+    };
+
+    post.comments.push(newComment);
+
+    await post.save();
+
+    res.redirect('back')
+  } catch (error) {
+    console.error(error);
+    res.redirect('back')
   }
 }
 
@@ -145,9 +192,10 @@ module.exports = {
   userProfile,
   exploreFeed,
   registerUser,
-  likePost,
-  dislikePost,
+  toggleLikePost,
   deletePost,
+  readPost,
+  postComments,
   logout,
   isLoggedIn
 };
