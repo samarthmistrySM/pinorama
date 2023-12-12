@@ -18,19 +18,30 @@ const { renderRegister,
   readPost,
   postComments,
   likecomment,
+  search,
+  user,
+  getSearch,
   logout,
-  isLoggedIn } = require('../controllers/index')
+  isLoggedIn, 
+  } = require('../controllers/index');
+const userModel = require("../models/userModel");
 
 //routes
 indexRouter.get("/", renderRegister);
 
 indexRouter.get("/login", renderLogin);
 
-indexRouter.post("/upload", upload.single("file"), uploadPost);
-
 indexRouter.get("/profile", isLoggedIn, userProfile);
 
 indexRouter.get('/feed', exploreFeed);
+
+indexRouter.get('/post/:postId',readPost);
+
+indexRouter.get('/searchuser',getSearch);
+
+indexRouter.get('/user/:userId',user)
+
+indexRouter.get('/search',search);
 
 indexRouter.post("/register", registerUser);
 
@@ -43,11 +54,11 @@ indexRouter.post(
   })
 );
 
+indexRouter.post("/upload", upload.single("file"), uploadPost);
+
 indexRouter.post('/like/:postId', isLoggedIn, toggleLikePost);
 
 indexRouter.post('/deletepost/:postId',isLoggedIn, deletePost);
-
-indexRouter.get('/post/:postId',readPost);
 
 indexRouter.post('/comments/:postId',isLoggedIn,postComments);
 

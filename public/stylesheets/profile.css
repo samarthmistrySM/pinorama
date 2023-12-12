@@ -165,6 +165,15 @@ button {
   transition: background-color 0.3s;
 }
 
+.dp{
+  height: 100px;
+  width: 100px;
+  border-radius: 100%;
+  object-fit: cover;
+  /* left: 50%; */
+  transform: translate(100%);
+}
+
 button:hover {
   background-color: #2980b9;
 }

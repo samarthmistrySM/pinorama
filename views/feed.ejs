@@ -13,6 +13,7 @@
     <div class="navbar">
         <% if (req.isAuthenticated()) { %>
             <a href="/profile" class="links"><ion-icon name="person-circle-outline"></ion-icon><p><%=user.username%></p></a>
+            <a href="/searchuser" class="links"> <ion-icon name="search-outline"></ion-icon> <p>Search</p> </a>
             <a href="/logout" class="links"><ion-icon name="log-out-outline"></ion-icon> <p>Logout</p></a>
             </div>
             <% } else { %>

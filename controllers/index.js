@@ -209,6 +209,39 @@ function logout(req,res) {
       });
 }
 
+async function search(req,res) {
+  const query = req.query.query;
+  try {
+      const users = await userModel.find({ username: { $regex: new RegExp(query, 'i') } });
+      res.json(users);
+  } catch (error) {
+      console.error('Error searching for users:', error);
+      res.status(500).send('Internal Server Error');
+  }
+}
+
+async function getSearch(req,res) {
+  if (req.isAuthenticated()) {
+    const user = await userModel.findOne({
+      username: req.session.passport.user,
+    });
+    return res.render("search", {  req, user });
+  } else {
+    return res.render("search", { req });
+  }
+}
+
+async function user(req,res) {
+  const userId = req.params.userId;
+  try {
+      const user = await userModel.findById(userId).populate('posts');
+      res.json(user);
+  } catch (error) {
+      console.error('Error fetching user data:', error);
+      res.status(500).send('Internal Server Error');
+  }
+}
+
 function isLoggedIn(req, res, next) {
     if (req.isAuthenticated()) return next();
     res.redirect("/login");
@@ -226,6 +259,9 @@ module.exports = {
   readPost,
   postComments,
   likecomment,
+  search,
+  user,
+  getSearch,
   logout,
   isLoggedIn
 };
