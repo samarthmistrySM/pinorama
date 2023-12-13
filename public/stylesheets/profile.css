@@ -9,28 +9,26 @@ body {
 .navbar {
   width: 100vw;
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-evenly;
   align-items: center;
   background-color: red;
   color: #fff;
   font-family: "Raleway";
 }
 
-.navbar .user {
-  padding: 10px 20px;
-  width: auto;
-  cursor: pointer;
-  justify-content: space-between;
+.links{
   display: flex;
   align-items: center;
+  text-decoration: none;
+  color: #fff;
 }
 
-.user h3 {
-  text-transform: uppercase;
-  letter-spacing: 3px;
+.flex{
+  display: flex;
+  justify-content: center;
 }
 
-.user ion-icon {
+.navbar ion-icon {
   font-weight: bolder;
   font-size: x-large;
 }
@@ -136,6 +134,12 @@ input[type="submit"]:hover {
   border-radius: 8px;
   overflow: hidden;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.info-item button{
+  padding: 10px;
+  font-size: 15px;
+  background: red;
 }
 
 .card img {

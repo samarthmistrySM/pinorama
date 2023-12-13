@@ -36,9 +36,9 @@ function renderUserData(userData) {
     <img src="${userData.dp}" alt="" />
     <div class="data">
         <h2>${userData.username}</h2>
-        <p>Email: ${userData.email}</p>
-        <p>Full Name: ${userData.fullname}</p>
-        <p>Posts: ${userData.posts.length}</p>
+        <p><span>Email: </span>${userData.email}</p>
+        <p><span>Full Name: </span> ${userData.fullname}</p>
+        <p><span>Posts: </span> ${userData.posts.length}</p>
     </div>
         </div>
 

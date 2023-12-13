@@ -18,8 +18,10 @@
 
 <body>
   <div class="navbar">
-    <div class="user" id="userToggle">
-      <ion-icon name="person-outline"></ion-icon>
+    <a href="/searchuser" class="links"> <ion-icon name="search-outline"></ion-icon> <p>Search</p> </a>
+    <a href="/feed" class="links"><ion-icon name="telescope-outline"></ion-icon></ion-icon> <p>Feed</p></a>
+    <div class="links" id="userToggle">
+      <ion-icon name="person-circle-outline"></ion-icon>
       <h3>
         <%=user.username%>
       </h3>
@@ -45,9 +47,8 @@
       <div class="info-item">
         <strong>Posts:</strong> <%=user.posts.length %>
       </div>
-      <div class="info-item">
+      <div class="info-item flex">
         <button id="logout-btn" onclick="window.location.href='/logout'">Logout</button>
-        <button id="logout-btn" onclick="window.location.href='/feed'">Feed</button>
       </div>
     </div>
 

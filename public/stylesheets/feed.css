@@ -17,11 +17,8 @@ body {
 
 .navbar ion-icon {
   margin-right: 10px;
-  color: red;
-  padding: 5px;
-  background: #fff;
+  color: white;
   font-size: 30px;
-  border-radius: 100%;
 }
 
 .links {

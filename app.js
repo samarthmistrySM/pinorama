@@ -26,6 +26,7 @@ connectMongoDb(process.env.MONGOOSE_URI)
 .catch((error)=>{console.log("Failed Database Connection" + error);})
 
 app.use(flash())
+
 app.use(expressSession({
   resave: false,
   saveUninitialized: false,

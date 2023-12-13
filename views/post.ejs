@@ -12,6 +12,7 @@
     <div class="navbar">
         <% if (req.isAuthenticated()) { %>
             <a href="/profile" class="links"><ion-icon name="person-circle-outline"></ion-icon><p><%=user.username%></p></a>
+            <a href="/searchuser" class="links"> <ion-icon name="search-outline"></ion-icon> <p>Search</p> </a>
             <a href="/feed" class="links"><ion-icon name="telescope-outline"></ion-icon></ion-icon> <p>Feed</p></a>
             </div>
             <% } else { %>
