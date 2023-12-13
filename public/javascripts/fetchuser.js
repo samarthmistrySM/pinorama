@@ -18,19 +18,33 @@ async function fetchUserData() {
 }
 
 function renderUserData(userData) {
-  // Get the container for user data
+
   const userdataContainer = document.querySelector(".userdata");
   let imagesHTML = "";
 
-  // Generate HTML for user's posts
+
   userData.posts.forEach((post) => {
+
+    var likesHTML = '';
+    if (post.likes && post.likes.length > 0) {
+      likesHTML = `<p>${post.likes.length} ${post.likes.length === 1 ? 'like' : 'likes'}</p>`;
+    } else {
+      likesHTML = '<p>0 likes</p>';
+    }
+    var readMoreFormHTML = `<form action="/post/${post._id}" method="get">
+                              <input type="submit" value="Read More">
+                            </form>`;
+
     imagesHTML += `<div class="post">
                       <img src="/images/uploads/${post.image}" alt="${post.imageText}">
                       <p>${post.imageText}</p>
+                      <div>
+                        ${likesHTML}
+                        ${readMoreFormHTML}
+                      </div>
                   </div>`;
   });
 
-  // Generate HTML for user profile
   const userHTML = `
     <div class="user-profile flex">
     <img src="${userData.dp}" alt="" />
@@ -46,7 +60,6 @@ function renderUserData(userData) {
             ${imagesHTML}
     </div>`;
 
-  // Set the innerHTML of the container with user data
   userdataContainer.innerHTML = userHTML;
 }
 

@@ -11,9 +11,9 @@
 <body>
     <div class="navbar">
         <% if (req.isAuthenticated()) { %>
-            <a href="/profile" class="links"><ion-icon name="person-circle-outline"></ion-icon><p><%=user.username%></p></a>
             <a href="/searchuser" class="links"> <ion-icon name="search-outline"></ion-icon> <p>Search</p> </a>
             <a href="/feed" class="links"><ion-icon name="telescope-outline"></ion-icon></ion-icon> <p>Feed</p></a>
+            <a href="/profile" class="links"><ion-icon name="person-circle-outline"></ion-icon><p><%=user.username%></p></a>
             </div>
             <% } else { %>
                 <a href="/login" class="links"><ion-icon name="log-in-outline"></ion-icon><p>Login</p></a>
@@ -21,7 +21,7 @@
     </div>
     <div class="post-container">
         <h3><%= post.imageText %></h3>
-        <h5>Posted by <%= post.user.username %> on <br> <%=post.createdAt%></h5>
+        <h5>Posted by <strong><%= post.user.username %></strong> on <br> <%=post.createdAt%></h5>
         <img class="postimage" src="/images/uploads/<%= post.image %>" alt="Post Image">
         <div class="post-content">
             <p class="likes">

@@ -29,9 +29,6 @@ body {
 
 .navbar ion-icon {
   margin-right: 10px;
-  padding: 5px;
-  color: red;
-  background: #fff;
   font-size: 30px;
   border-radius: 100%;
 }
