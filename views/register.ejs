@@ -12,6 +12,11 @@
     <div class="content">
       <img src="/images/pinorama.png" alt="pin logo" class="img1" />
       <p class="header">Sign up to join</p>
+      <% if (messages.error && messages.error.length > 0) { %>
+        <div class="flash-error">
+          <%= messages.error[0] %>
+        </div>
+      <% } %>
       <form id="registrationForm" action="/register" method="post">
         <input type="email" name="email" placeholder="Email" class="detail" /><br />
         <input type="text" name="username" placeholder="Username" class="detail" /><br />

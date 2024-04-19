@@ -4,7 +4,7 @@ const userModel = require("../models/userModel");
 const postModel = require("../models/postModel");
 
 function renderRegister(req, res) {
-  return res.render("register");
+  res.render('register', { messages: req.flash() });
 }
 
 function renderLogin(req, res) {
@@ -67,7 +67,8 @@ async function registerUser(req, res) {
     const existingUser = await userModel.findOne({ username });
 
     if (existingUser) {
-      return res.send("User already exists");
+      req.flash('error', 'User already exists.. Try new username!');
+      return res.redirect('/'); 
     }
 
     const userData = new userModel({ username, email, fullname });
@@ -75,61 +76,63 @@ async function registerUser(req, res) {
     userModel.register(userData, req.body.password, (err, user) => {
       if (err) {
         console.error(err);
-        return res.send("email already exist!");
+        req.flash('error', 'Email already exists... Try again with new email Addresss!');
+        return res.redirect('/'); 
       }
 
-      passport.authenticate("local")(req, res, () => {
-        return res.redirect("/profile");
+      passport.authenticate('local')(req, res, () => {
+        req.flash('success', 'Registration successful. Welcome!');
+        return res.redirect('/profile');
       });
     });
   } catch (error) {
     console.log(error);
-    res.send(error);
+    req.flash('error', 'An error occurred during registration.');
+    res.redirect('/'); 
   }
 }
-
 
 async function toggleLikePost(req, res) {
   const postId = req.params.postId;
 
   try {
-      const post = await postModel.findById(postId);
-      const userLiked = post.likes.includes(req.user._id);
+    const post = await postModel.findById(postId);
+    const userLiked = post.likes.includes(req.user._id);
 
-      if (!userLiked) {
-          post.likes.push(req.user._id);
-      } else {
-          post.likes.pull(req.user._id);
-      }
+    if (!userLiked) {
+      post.likes.push(req.user._id);
+    } else {
+      post.likes.pull(req.user._id);
+    }
 
-      await post.save();
-      return res.redirect('back');
+    await post.save();
+    return res.redirect("back");
   } catch (error) {
-      console.error(error);
-      return res.redirect('back');
+    console.error(error);
+    return res.redirect("back");
   }
 }
 
-async function deletePost(req,res){
+async function deletePost(req, res) {
   const postId = req.params.postId;
 
-  try{
+  try {
     const post = await postModel.findByIdAndDelete(postId);
-    return res.redirect('back');
-  }
-  catch(error){
+    return res.redirect("back");
+  } catch (error) {
     console.log(error);
-    return res.redirect('back');
+    return res.redirect("back");
   }
 }
 
-async function readPost(req,res){
+async function readPost(req, res) {
   const postId = req.params.postId;
 
-  try{
-    const post = await postModel.findById(postId)
-    .populate("user")
-    .populate("comments.user");
+  try {
+    const post = await postModel
+      .findById(postId)
+      .populate("user")
+      .populate("comments.user");
     if (req.isAuthenticated()) {
       const user = await userModel.findOne({
         username: req.session.passport.user,
@@ -138,114 +141,114 @@ async function readPost(req,res){
     } else {
       return res.render("post", { post, req });
     }
-  }
-  catch(error){
+  } catch (error) {
     console.log(error);
-    res.redirect('back');
+    res.redirect("back");
   }
 }
 
-async function postComments(req,res) {
+async function postComments(req, res) {
   try {
     const postId = req.params.postId;
     const { CommentText } = req.body;
 
     const post = await postModel.findById(postId);
-    
+
     if (!post) {
-      return res.status(404).json({ error: 'Post not found' });
+      return res.status(404).json({ error: "Post not found" });
     }
 
     const newComment = {
       CommentText,
-      user: req.user._id, 
-      CommentLikes: [], 
+      user: req.user._id,
+      CommentLikes: [],
     };
 
     post.comments.push(newComment);
     await post.save();
 
-    res.redirect('back')
+    res.redirect("back");
   } catch (error) {
     console.error(error);
-    res.redirect('back')
+    res.redirect("back");
   }
 }
 
-async function likecomment(req,res){
+async function likecomment(req, res) {
   try {
     const postId = req.query.postId;
     const commentId = req.params.commentId;
 
     const post = await postModel.findById(postId);
 
-    const comment = post.comments.find(comment => comment.id == commentId);
+    const comment = post.comments.find((comment) => comment.id == commentId);
 
     console.log(comment);
-    
+
     const userLiked = comment.CommentLikes.includes(req.user._id);
     console.log(userLiked);
 
-    if(!userLiked){
+    if (!userLiked) {
       comment.CommentLikes.push(req.user._id);
-    }
-    else{
+    } else {
       comment.CommentLikes.pull(req.user._id);
     }
 
     await post.save();
-    res.redirect('back')
+    res.redirect("back");
   } catch (error) {
     console.log(error);
   }
 }
 
-function logout(req,res) {
-    req.logout(function (err) {
-        if (err) {
-          return next(err);
-        }
-        return res.redirect("/login");
-      });
+function logout(req, res) {
+  req.logout(function (err) {
+    if (err) {
+      return next(err);
+    }
+    return res.redirect("/login");
+  });
 }
 
-async function search(req,res) {
+async function search(req, res) {
   const query = req.query.query;
   try {
-      const users = await userModel.find({ username: { $regex: new RegExp(query, 'i') } });
-      res.json(users);
+    const users = await userModel.find({
+      username: { $regex: new RegExp(query, "i") },
+    });
+    res.json(users);
   } catch (error) {
-      console.error('Error searching for users:', error);
-      res.status(500).send('Internal Server Error');
+    console.error("Error searching for users:", error);
+    res.status(500).send("Internal Server Error");
   }
 }
 
-async function getSearch(req,res) {
+async function getSearch(req, res) {
   if (req.isAuthenticated()) {
     const user = await userModel.findOne({
       username: req.session.passport.user,
     });
-    return res.render("search", {  req, user });
+    return res.render("search", { req, user });
   } else {
     return res.render("search", { req });
   }
 }
 
-async function user(req,res) {
+async function user(req, res) {
   const userId = req.params.userId;
   try {
-      const user = await userModel.findById(userId).populate('posts');
-      res.json(user);
+    const user = await userModel.findById(userId).populate("posts");
+    res.json(user);
   } catch (error) {
-      console.error('Error fetching user data:', error);
-      res.status(500).send('Internal Server Error');
+    console.error("Error fetching user data:", error);
+    res.status(500).send("Internal Server Error");
   }
 }
 
 function isLoggedIn(req, res, next) {
-    if (req.isAuthenticated()) return next();
-    res.redirect("/login");
-  }
+  if (req.isAuthenticated()) return next();
+  res.redirect("/login");
+}
 
 module.exports = {
   renderRegister,
@@ -263,5 +266,5 @@ module.exports = {
   user,
   getSearch,
   logout,
-  isLoggedIn
+  isLoggedIn,
 };

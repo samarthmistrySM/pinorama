@@ -67,7 +67,7 @@ indexRouter.post('/likecomment/:commentId',isLoggedIn,likecomment)
 indexRouter.get("/logout", logout);
 
 indexRouter.get("*", (req, res) => {
-  res.render("404");
+  res.render("404",{title:'page not found'});
 });
 
 module.exports = indexRouter;

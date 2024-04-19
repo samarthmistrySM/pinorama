@@ -14,6 +14,10 @@ body {
   height: 100vh;
 }
 
+.error{
+  color: red;
+}
+
 .content {
   background-color: #fff;
   padding: 20px;

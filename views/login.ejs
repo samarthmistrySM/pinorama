@@ -13,13 +13,14 @@
 <body>
   <div class="container">
     <div class="content">
-      <img src="/images/pinorama.png" alt="pin logo" class="img1" />
+      <img src="/images/pinorama.png" alt="Pinorama logo" class="img1" />
       
       <p class="header">Login to Pinorama</p>
 
       <%if(error.length>0) { %>
         <p class="error"><%=error%></p>
         <%}%>
+        
       <form id="registrationForm" action="/login" method="post">
         <input type="text" name="username" placeholder="Username" class="detail" /><br />
         <input type="password" name="password" placeholder="Password" class="detail" /><br />
